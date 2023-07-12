@@ -1,6 +1,8 @@
 import express from "express";
 import OAuth2Server from "oauth2-server";
 
+const app = express();
+
 //Dummy users
 const users = {
   alice: {
@@ -30,7 +32,41 @@ const oauth = new OAuth2Server({
         }
       }
     },
+    saveAuthorizationCode: async () => {},
+    saveToken: async () => {},
   },
 });
 
-const app = express();
+app.get("/ouath/authorize", (req, res, next) => {
+  try {
+    const request = new OAuth2Server.Request(req);
+    const response = new OAuth2Server.Response(res);
+
+    const result = oauth.authorize(request, response);
+    if (result.authorizationCode) {
+      res.json(result);
+    } else {
+      res.status(response.status).send(response.body);
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+
+app.post("/oauth/token", (req, res, next) => {
+  try {
+    const request = new OAuth2Server.Request(req);
+    const response = new OAuth2Server.Response(res);
+
+    const token = oauth.token(request, response);
+    if (token.authorizationCode) {
+      res.json(token);
+    } else {
+      res.status(response.status).send(response.body);
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+
+app.listen(4000);
