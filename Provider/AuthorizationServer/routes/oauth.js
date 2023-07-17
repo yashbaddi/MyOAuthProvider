@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import { users } from "./users.js";
 import { clients } from "./client.js";
 import { isAuthenticated } from "../middlewares/auth.js";
-import { privateKey } from "../../../config.js";
+import { privateKey } from "../../config.js";
 import jsonwebtoken from "jsonwebtoken";
 
 const oauthRouter = express.Router();
@@ -49,6 +49,23 @@ const oauth = new OAuth2Server({
 });
 
 oauthRouter.get("/authorize", isAuthenticated, async (req, res, next) => {
+  express.static("");
+});
+
+oauthRouter.post("/token", (req, res, next) => {
+  try {
+    const request = new OAuth2Server.Request(req);
+    const response = new OAuth2Server.Response(res);
+
+    const token = oauth.token(request, response);
+
+    res.json(token);
+  } catch (e) {
+    next(e);
+  }
+});
+
+oauthRouter.post("/approve", (req, res) => {
   try {
     const request = new OAuth2Server.Request(req);
     const response = new OAuth2Server.Response(res);
@@ -60,19 +77,6 @@ oauthRouter.get("/authorize", isAuthenticated, async (req, res, next) => {
     } else {
       res.status(response.status).send(response.body);
     }
-  } catch (e) {
-    next(e);
-  }
-});
-
-oauthRouter.post("/token", (req, res, next) => {
-  try {
-    const request = new OAuth2Server.Request(req);
-    const response = new OAuth2Server.Response(res);
-
-    const token = oauth.token(request, response);
-
-    res.json(token);
   } catch (e) {
     next(e);
   }
