@@ -1,7 +1,7 @@
-import { logoutRequest } from "../requests.js";
+import { approveRequest, logoutRequest, rejectRequest } from "../requests.js";
 import { login } from "./login.js";
 
-export function showData(root, data) {
+export function consentPage(root) {
   root.innerHTML = "";
   const showData = document.createElement("div");
   const dataHeader = document.createElement("h1");
@@ -11,12 +11,18 @@ export function showData(root, data) {
 
   const logOutBtn = document.createElement("button");
 
+  consentBtn.textContent = "Approve";
+  rejectBtn.textContent = "Reject";
   logOutBtn.textContent = "LogOut Button";
 
-  showData.append(dataHeader, logOutBtn);
+  showData.append(dataHeader, consentBtn, rejectBtn, logOutBtn);
   root.append(showData);
-  consentBtn.addEventListener("click", (e) => {});
-  rejectBtn.addEventListener("click", (e) => {});
+  consentBtn.addEventListener("click", (e) => {
+    approveRequest();
+  });
+  rejectBtn.addEventListener("click", (e) => {
+    rejectRequest();
+  });
 
   logOutBtn.addEventListener("click", (e) => {
     logoutRequest().then((res) => {

@@ -20,10 +20,14 @@ let authRequest, authResponse;
 const oauth = new OAuth2Server({
   model: {
     getClient: async (clientId, clientSecret) => {
-      if (clients[clientId] == clientSecret) {
-        return clients[clientId];
-      }
-      return false;
+      const client = clients[clientId];
+      console.log(oauth);
+
+      return {
+        id: clientId,
+        redirectUris: client.redirectUris,
+        grants: client.grants,
+      };
     },
 
     generateAuthorizationCode: async (client, user, scope) => {
@@ -37,7 +41,6 @@ const oauth = new OAuth2Server({
       };
       return jsonwebtoken.sign(payload, privateKey);
     },
-    // generateRefreshToken: async (client, user, scope) => {},
     getAuthorizationCode: async (authorizationCode) => {
       authorizationCodes[authorizationCode];
       return authorizationCode;
@@ -48,13 +51,26 @@ const oauth = new OAuth2Server({
         user: user,
       };
     },
-    // saveToken: async (token, client, user) => {},
-    // revokeAuthorizationCode: async (code) => {},
+    getAccessToken(token) {
+      return {
+        accessToken: token,
+      };
+    },
+    saveToken: async (token, client, user) => {
+      return token;
+    },
+    revokeAuthorizationCode: async (code) => {
+      return true;
+    },
     // validateScope: async () => {},
   },
 });
 
-oauthRouter.get("/authorize", isAuthenticated, async (req, res, next) => {
+oauthRouter.get("/", (req, res) => {
+  res.send("Test Route");
+});
+
+oauthRouter.get("/authorize", async (req, res, next) => {
   authRequest = new OAuth2Server.Request(req);
   authResponse = new OAuth2Server.Response(res);
 
@@ -74,12 +90,16 @@ oauthRouter.post("/token", (req, res, next) => {
   }
 });
 
-oauthRouter.use(
-  "/consent",
-  express.static(path.join(__dirname, "../Frontend"))
-);
+oauthRouter.use("/consent", (req, res, next) => {
+  console.log("enter consent");
+  express.static(path.join(__dirname, "../Frontend/UserConsentScr"))(
+    req,
+    res,
+    next
+  );
+});
 
-oauthRouter.post("/approved", async (req, res) => {
+oauthRouter.post("/approve", async (req, res) => {
   try {
     const result = await oauth.authorize(authRequest, authResponse);
 

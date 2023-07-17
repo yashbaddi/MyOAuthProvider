@@ -1,10 +1,10 @@
 import {
   generateClientCredentialsRequest,
   loginRequest,
-  showDataRequest,
+  isLoggedIn,
 } from "../requests.js";
 import { clientCredentials } from "./clientCredentials.js";
-import { showData } from "./showData.js";
+import { consentPage } from "./consentPage.js";
 import { signUp } from "./signup.js";
 
 export function login(root) {
@@ -29,9 +29,9 @@ export function login(root) {
   loginBtn.addEventListener("click", (e) => {
     loginRequest(username.value, password.value).then((response) => {
       if (response[0]) {
-        showDataRequest().then((res) => {
+        isLoggedIn().then((res) => {
           if (res[0]) {
-            showData(root, res[1]);
+            consentPage(root, res[1]);
           }
         });
       }
@@ -43,7 +43,9 @@ export function login(root) {
   });
   genClientBtn.addEventListener("click", () => {
     generateClientCredentialsRequest().then((res) => {
-      clientCredentials(root, res);
+      if (res[0]) {
+        clientCredentials(root, res[1]);
+      }
     });
   });
 

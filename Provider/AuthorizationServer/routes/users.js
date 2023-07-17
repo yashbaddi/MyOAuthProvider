@@ -1,10 +1,20 @@
 import express from "express";
 import OAuth2Server from "oauth2-server";
+import { isAuthenticated } from "../middlewares/auth.js";
 import { v4 as uuid } from "uuid";
 
 const usersRouter = express.Router();
 
-export const users = {};
+export const users = {
+  yashbaddi: {
+    password: "12345",
+    profile: {
+      name: "Yash Baddi",
+      email: "yashbaddi29@gmail.com",
+      data: "Hey this is the secret data",
+    },
+  }, //Test user
+};
 export const sessions = {};
 
 usersRouter.post("/signup", (req, res) => {
@@ -21,8 +31,11 @@ usersRouter.post("/signup", (req, res) => {
 });
 
 usersRouter.post("/login", (req, res) => {
+  console.log("users", users);
+  console.log("username", users[req.body.username]);
+  console.log("pass", req.body.password);
   if (users[req.body.username]) {
-    if (users[req.body.username].password === req.body.password) {
+    if (users[req.body.username].password == req.body.password) {
       const sessionID = uuid();
       sessions[sessionID] = req.body.username;
       console.log("session after login", sessions);
@@ -45,10 +58,8 @@ usersRouter.post("/logout", (req, res, next) => {
   res.sendStatus(200);
 });
 
-usersRouter.get("/", authMiddleware, (req, res) => {
-  res.send({ data: users[req.cookies.username].data });
+usersRouter.get("/", isAuthenticated, (req, res) => {
+  res.send({ data: "Logged In" });
 });
-
-usersRouter.listen(8000);
 
 export default usersRouter;

@@ -1,3 +1,5 @@
+import { sessions } from "../routes/users.js";
+
 export function isAuthenticated(req, res, next) {
   console.log(req.cookies);
   if (
