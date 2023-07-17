@@ -1,9 +1,13 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import axios from "axios";
 import { v4 as uuid } from "uuid";
 
 const app = express();
+
+const clientSecret = "";
+const clientId = "";
 
 function authMiddleware(req, res, next) {
   console.log(req.cookies);
@@ -44,8 +48,7 @@ app.use(cookieParser());
 // });
 
 app.post("/login", (req, res) => {
-  const clientId = "your_client_id";
-  const redirectUri = "http://localhost:8001/callback";
+  const redirectUri = "http://localhost:3002/callback";
   const scope = "profile";
 
   const authorizationUri = `http://localhost:3000/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
@@ -68,7 +71,32 @@ app.post("/login", (req, res) => {
   // }
 });
 
-app.get("/callback", (req, res, next) => {});
+app.get("/callback", async (req, res, next) => {
+  const authCode = req.body.code;
+
+  const authorizationUri = "localhost:3000";
+  const accessTokenQuery = {
+    client_id: clientId,
+    client_secret: clientSecret,
+    code: authCode,
+    grant_type: "code",
+  };
+  const queryString = new URLSearchParams(accessTokenQuery).toString();
+
+  const tokens = await axios.get(
+    `${authorizationUri}/oauth/token?${queryString}`
+  );
+  const resourceServerURI = "localhost:3001";
+  const resourceQuery = {
+    access_token: tokens.access_token,
+  };
+
+  const resourceQueryString = new URLSearchParams(resourceQuery).toString();
+
+  const responseData = await axios.get(
+    `${resourceServerURI}/oauth/token?${resourceQueryString}`
+  );
+});
 
 app.post("/logout", (req, res) => {
   sessions[req.cookies.sessionID] = undefined;

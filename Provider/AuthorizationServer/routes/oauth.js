@@ -2,14 +2,20 @@ import express from "express";
 import OAuth2Server from "oauth2-server";
 import { v4 as uuid } from "uuid";
 import { users } from "./users.js";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+
 import { clients } from "./client.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 import { privateKey } from "../../config.js";
 import jsonwebtoken from "jsonwebtoken";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 const oauthRouter = express.Router();
 
 const authorizationCodes = {};
+let authRequest, authResponse;
 
 const oauth = new OAuth2Server({
   model: {
@@ -49,15 +55,18 @@ const oauth = new OAuth2Server({
 });
 
 oauthRouter.get("/authorize", isAuthenticated, async (req, res, next) => {
-  express.static("");
+  authRequest = new OAuth2Server.Request(req);
+  authResponse = new OAuth2Server.Response(res);
+
+  res.redirect("http://localhost:3000/oauth/consent");
 });
 
 oauthRouter.post("/token", (req, res, next) => {
   try {
-    const request = new OAuth2Server.Request(req);
-    const response = new OAuth2Server.Response(res);
+    const tokenRequest = new OAuth2Server.Request(req);
+    const tokenResponse = new OAuth2Server.Response(res);
 
-    const token = oauth.token(request, response);
+    const token = oauth.token(tokenRequest, tokenResponse);
 
     res.json(token);
   } catch (e) {
@@ -65,21 +74,29 @@ oauthRouter.post("/token", (req, res, next) => {
   }
 });
 
-oauthRouter.post("/approve", (req, res) => {
-  try {
-    const request = new OAuth2Server.Request(req);
-    const response = new OAuth2Server.Response(res);
+oauthRouter.use(
+  "/consent",
+  express.static(path.join(__dirname, "../Frontend"))
+);
 
-    const result = awaitoauth.authorize(request, response);
+oauthRouter.post("/approved", async (req, res) => {
+  try {
+    const result = await oauth.authorize(authRequest, authResponse);
+
     if (result.authorizationCode) {
       const redirectUri = `${result.redirectUri}?code=${result.authorizationCode}`;
       res.redirect(redirectUri);
     } else {
-      res.status(response.status).send(response.body);
+      res.status(authResponse.status).send(authResponse.body);
     }
   } catch (e) {
-    next(e);
+    console.log(e);
+    res.sendStatus(500);
   }
+});
+
+oauthRouter.post("/denied", (req, res) => {
+  res.status(403).send("Request Denied");
 });
 
 export default oauthRouter;
