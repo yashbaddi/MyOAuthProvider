@@ -10,7 +10,11 @@ export const sessions = {};
 usersRouter.post("/signup", (req, res) => {
   users[req.body.username] = {
     password: req.body.password,
-    data: req.body.data,
+    profile: {
+      name: req.body.name,
+      email: req.body.email,
+      data: req.body.data,
+    },
   };
   console.log("USERS AFTER SIGNUP", users);
   res.sendStatus(201);

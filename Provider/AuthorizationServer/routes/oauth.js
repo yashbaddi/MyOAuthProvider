@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import { users } from "./users.js";
 import { clients } from "./client.js";
 import { isAuthenticated } from "../middlewares/auth.js";
-import { privateKey } from "../../config.js";
+import { privateKey } from "../../../config.js";
 import jsonwebtoken from "jsonwebtoken";
 
 const oauthRouter = express.Router();
@@ -19,6 +19,7 @@ const oauth = new OAuth2Server({
       }
       return false;
     },
+
     generateAuthorizationCode: async (client, user, scope) => {
       return uuid();
     },
@@ -30,7 +31,7 @@ const oauth = new OAuth2Server({
       };
       return jsonwebtoken.sign(payload, privateKey);
     },
-    generateRefreshToken: async (client, user, scope) => {},
+    // generateRefreshToken: async (client, user, scope) => {},
     getAuthorizationCode: async (authorizationCode) => {
       authorizationCodes[authorizationCode];
       return authorizationCode;
@@ -41,18 +42,18 @@ const oauth = new OAuth2Server({
         user: user,
       };
     },
-    saveToken: async (token, client, user) => {},
-    revokeAuthorizationCode: async (code) => {},
-    validateScope: async () => {},
+    // saveToken: async (token, client, user) => {},
+    // revokeAuthorizationCode: async (code) => {},
+    // validateScope: async () => {},
   },
 });
 
-oauthRouter.get("/authorize", isAuthenticated, (req, res, next) => {
+oauthRouter.get("/authorize", isAuthenticated, async (req, res, next) => {
   try {
     const request = new OAuth2Server.Request(req);
     const response = new OAuth2Server.Response(res);
 
-    const result = oauth.authorize(request, response);
+    const result = awaitoauth.authorize(request, response);
     if (result.authorizationCode) {
       const redirectUri = `${result.redirectUri}?code=${result.authorizationCode}`;
       res.redirect(redirectUri);
