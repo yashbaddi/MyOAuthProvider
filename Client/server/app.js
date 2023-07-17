@@ -68,7 +68,9 @@ app.post("/login", (req, res) => {
   // }
 });
 
-app.post("/logout", (req, res, next) => {
+app.get("/callback", (req, res, next) => {});
+
+app.post("/logout", (req, res) => {
   sessions[req.cookies.sessionID] = undefined;
   res.clearCookie("sessionID");
   res.clearCookie("username");
@@ -80,4 +82,4 @@ app.get("/", authMiddleware, (req, res) => {
   res.send({ data: users[req.cookies.username].data });
 });
 
-app.listen(8000);
+app.listen(3002);
