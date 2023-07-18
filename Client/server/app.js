@@ -93,9 +93,7 @@ app.get("/callback", async (req, res, next) => {
 
   const resourceQueryString = new URLSearchParams(resourceQuery).toString();
 
-  const responseData = await axios.get(
-    `${resourceServerURI}/oauth/token?${resourceQueryString}`
-  );
+  const responseData = await axios.get();
 });
 
 app.post("/logout", (req, res) => {

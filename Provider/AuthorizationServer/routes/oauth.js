@@ -15,18 +15,18 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const oauthRouter = express.Router();
 
 const authorizationCodes = {};
+const tokens = {};
 let authRequest, authResponse;
 
 const oauth = new OAuth2Server({
   model: {
     getClient: async (clientId, clientSecret) => {
       const client = clients[clientId];
-      console.log(oauth);
 
       return {
         id: clientId,
         redirectUris: client.redirectUris,
-        grants: client.grants,
+        grants: ["authorization_code"],
       };
     },
 
@@ -42,11 +42,14 @@ const oauth = new OAuth2Server({
       return jsonwebtoken.sign(payload, privateKey);
     },
     getAuthorizationCode: async (authorizationCode) => {
-      authorizationCodes[authorizationCode];
-      return authorizationCode;
+      return authorizationCodes[authorizationCode];
     },
     saveAuthorizationCode: async (code, client, user) => {
-      authorizationCodes[code] = {
+      console.log("Inside save auth code");
+      authorizationCodes[client.clientId] = {
+        authorizationCode: code,
+        expiresAt: 12222,
+        redirectUri: client.redirectUris[0],
         client: client,
         user: user,
       };
@@ -64,10 +67,7 @@ const oauth = new OAuth2Server({
     },
     // validateScope: async () => {},
   },
-});
-
-oauthRouter.get("/", (req, res) => {
-  res.send("Test Route");
+  grants: ["authorization_code"],
 });
 
 oauthRouter.get("/authorize", async (req, res, next) => {
