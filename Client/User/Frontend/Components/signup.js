@@ -34,6 +34,6 @@ export function signUp(root) {
     login(root);
   });
 
-  signUpDiv.append(username, password, data, signupBtn);
+  signUpDiv.append(data, password, signupBtn);
   root.append(signUpDiv);
 }

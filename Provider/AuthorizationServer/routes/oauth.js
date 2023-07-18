@@ -14,7 +14,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const oauthRouter = express.Router();
 
-const authorizationCodes = {};
+const authCodes = {};
 const tokens = {};
 let authRequest, authResponse;
 
@@ -30,9 +30,6 @@ const oauth = new OAuth2Server({
       };
     },
 
-    generateAuthorizationCode: async (client, user, scope) => {
-      return uuid();
-    },
     generateAccessToken: async (client, user, scope) => {
       payload = {
         client: client,
@@ -41,18 +38,17 @@ const oauth = new OAuth2Server({
       };
       return jsonwebtoken.sign(payload, privateKey);
     },
-    getAuthorizationCode: async (authorizationCode) => {
-      return authorizationCodes[authorizationCode];
+    getAuthorizationCode: async (code) => {
+      console.log("In get auth code", code);
+      return code.authorizationCode;
     },
     saveAuthorizationCode: async (code, client, user) => {
-      console.log("Inside save auth code");
-      authorizationCodes[client.clientId] = {
-        authorizationCode: code,
-        expiresAt: 12222,
-        redirectUri: client.redirectUris[0],
+      authCodes[client.clientId] = {
+        code: code,
         client: client,
         user: user,
       };
+      return code;
     },
     getAccessToken(token) {
       return {
@@ -101,7 +97,15 @@ oauthRouter.use("/consent", (req, res, next) => {
 
 oauthRouter.post("/approve", async (req, res) => {
   try {
-    const result = await oauth.authorize(authRequest, authResponse);
+    const options = {
+      authenticateHandler: {
+        handle: (data) => {
+          return { id: data };
+        },
+      },
+    };
+    const result = await oauth.authorize(authRequest, authResponse, options);
+    console.log("authorization Result", result);
 
     if (result.authorizationCode) {
       const redirectUri = `${result.redirectUri}?code=${result.authorizationCode}`;

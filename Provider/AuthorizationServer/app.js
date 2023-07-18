@@ -12,9 +12,6 @@ app.use(cookieParser());
 app.use("/client", clientRouter);
 app.use("/users", usersRouter);
 app.use("/oauth", oauthRouter);
-app.get("/", (req, res) => {
-  res.send("hey");
-});
 
 app.use((err, req, res, next) => {
   res.status(err.code || 500).json(err);
