@@ -1,0 +1,5 @@
+To get authorization code:
+http://localhost:3000/oauth/authorize?client_id=f8f7b90f-5371-425f-a675-233926229578&redirect_uri=http://localhost:3000/&response_type=code&scope=profile&state=randomstring
+
+
+To get access tokens
