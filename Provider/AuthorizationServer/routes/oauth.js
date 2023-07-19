@@ -16,17 +16,18 @@ const oauthRouter = express.Router();
 
 const authCodes = {};
 const tokens = {};
+
 let authRequest, authResponse;
 
 const oauth = new OAuth2Server({
   model: {
     getClient: async (clientId, clientSecret) => {
       const client = clients[clientId];
-
       return {
         id: clientId,
+        clientSecret: client.secret,
         redirectUris: client.redirectUris,
-        grants: ["authorization_code"],
+        grants: client.grants,
       };
     },
 
@@ -38,18 +39,28 @@ const oauth = new OAuth2Server({
       };
       return jsonwebtoken.sign(payload, privateKey);
     },
+
     getAuthorizationCode: async (code) => {
-      console.log("In get auth code", code);
-      return code.authorizationCode;
-    },
-    saveAuthorizationCode: async (code, client, user) => {
-      authCodes[client.clientId] = {
+      const savedCode = authCodes[code];
+
+      return {
         code: code,
+        redirectUri: savedCode.redirectUri,
+        client: savedCode.client,
+        user: savedCode.user,
+      };
+    },
+
+    saveAuthorizationCode: async (code, client, user) => {
+      authCodes[code] = {
+        code: code,
+        redirectUri: client.redirectUris,
         client: client,
         user: user,
       };
       return code;
     },
+
     getAccessToken(token) {
       return {
         accessToken: token,
@@ -59,7 +70,11 @@ const oauth = new OAuth2Server({
       return token;
     },
     revokeAuthorizationCode: async (code) => {
-      return true;
+      if (authCodes[code] !== undefined) {
+        authCodes[code] = undefined;
+        return true;
+      }
+      return false;
     },
     // validateScope: async () => {},
   },

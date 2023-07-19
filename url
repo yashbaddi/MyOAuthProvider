@@ -1,6 +1,0 @@
-https://accounts.google.com/v3/signin/identifier?dsh=S-485541008:1689594036274563&continue=https://accounts.google.com/gsi/select?client_id=705819728788-b2c1kcs7tst3b7ghv7at0hkqmtc68ckl.apps.googleusercontent.com&auto_select=false&ux_mode=popup&ui_mode=card&as=XYwWmt9vynlbkvT9VkjFcQ&channel_id=958bf5e7806b632d5d29763fee1a93572d1f6af83bc0d4b4e0c28e53b165ea2d&origin=https://www.reddit.com&faa=1&ifkv=AeDOFXhG18mYpfF4N2Yur53HHgwU_liGnRU9SnrLS0-osMM4Eb0w47p6pEaehYDJThcckym25Qp4Ig&flowName=GlifWebSignIn&flowEntry=ServiceLogin
-
-http://localhost:3000/oauth/authorize?client_id=f8f7b90f-5371-425f-a675-233926229578
-&redirect_uri=localhost:3000
-&response_type=code&
-scope=profile

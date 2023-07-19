@@ -3,9 +3,9 @@ import { v4 as uuid } from "uuid";
 
 export const clients = {
   "f8f7b90f-5371-425f-a675-233926229578": {
-    clientSecret: "950bc64f-9740-4198-9a83-383f4729371c",
+    secret: "950bc64f-9740-4198-9a83-383f4729371c",
     redirectUris: ["http://localhost:3000/"],
-    grants: ["code"],
+    grants: ["authorization_code"],
   }, //Test Client
 };
 
