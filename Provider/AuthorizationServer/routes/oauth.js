@@ -13,6 +13,7 @@ import jsonwebtoken from "jsonwebtoken";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const oauthRouter = express.Router();
+oauthRouter.use(express.urlencoded());
 
 const authCodes = {};
 const tokens = {};
@@ -22,56 +23,72 @@ let authRequest, authResponse;
 const oauth = new OAuth2Server({
   model: {
     getClient: async (clientId, clientSecret) => {
+      console.log("clients", clients, "id:", clientId, "secret:", clientSecret);
       const client = clients[clientId];
       return {
         id: clientId,
-        clientSecret: client.secret,
+        clientSecret: clientSecret,
         redirectUris: client.redirectUris,
         grants: client.grants,
       };
     },
-
+    getUser: async (username) => {
+      return {};
+    },
     generateAccessToken: async (client, user, scope) => {
-      payload = {
+      const payload = {
         client: client,
-        user: user,
+        user: {},
         scope: scope,
       };
+      console.log(payload);
       return jsonwebtoken.sign(payload, privateKey);
     },
 
-    getAuthorizationCode: async (code) => {
-      const savedCode = authCodes[code];
-
+    getAuthorizationCode: async (authCode) => {
+      const savedCode = authCodes[authCode];
       return {
-        code: code,
+        code: authCode,
+        expiresAt: savedCode.expiresAt,
         redirectUri: savedCode.redirectUri,
+        scope: savedCode.scope,
         client: savedCode.client,
         user: savedCode.user,
       };
     },
 
     saveAuthorizationCode: async (code, client, user) => {
-      authCodes[code] = {
-        code: code,
-        redirectUri: client.redirectUris,
+      authCodes[code.authorizationCode] = {
+        expiresAt: code.expiresAt,
+        redirectUri: code.redirectUri,
+        scope: code.scope,
         client: client,
         user: user,
       };
       return code;
     },
 
-    getAccessToken(token) {
-      return {
-        accessToken: token,
-      };
+    getAccessToken(accessToken) {
+      const tokenInfo = tokens[accessToken];
+      console.log("tokenInfo", tokenInfo);
+      return tokenInfo;
     },
     saveToken: async (token, client, user) => {
-      return token;
+      tokens[token.accessToken] = {
+        accessToken: token.accessToken,
+        accessTokenExpiresAt: token.accessTokenExpiresAt,
+        refreshToken: token.refreshToken,
+        refreshTokenExpiresAt: token.refreshTokenExpiresAt,
+        scope: token.scope,
+        client: client,
+        user: {},
+      };
+      console.log("in save token", tokens[token.accessToken]);
+      return tokens[token.accessToken];
     },
     revokeAuthorizationCode: async (code) => {
-      if (authCodes[code] !== undefined) {
-        authCodes[code] = undefined;
+      if (authCodes[code.code] !== undefined) {
+        authCodes[code.code] = undefined;
         return true;
       }
       return false;
@@ -88,12 +105,13 @@ oauthRouter.get("/authorize", async (req, res, next) => {
   res.redirect("http://localhost:3000/oauth/consent");
 });
 
-oauthRouter.post("/token", (req, res, next) => {
+oauthRouter.post("/token", async (req, res, next) => {
   try {
     const tokenRequest = new OAuth2Server.Request(req);
     const tokenResponse = new OAuth2Server.Response(res);
 
-    const token = oauth.token(tokenRequest, tokenResponse);
+    const token = await oauth.token(tokenRequest, tokenResponse);
+    console.log("In token", token);
 
     res.json(token);
   } catch (e) {
