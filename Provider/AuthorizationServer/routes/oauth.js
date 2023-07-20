@@ -37,8 +37,11 @@ const oauth = new OAuth2Server({
     },
     generateAccessToken: async (client, user, scope) => {
       const payload = {
-        client: client,
-        user: {},
+        iss: "MyOAuthProvider",
+        sub: { user: "123" },
+        exp: Date.now() + 1000000,
+        iat: Date.now(),
+        aud: client,
         scope: scope,
       };
       console.log(payload);
@@ -81,7 +84,7 @@ const oauth = new OAuth2Server({
         refreshTokenExpiresAt: token.refreshTokenExpiresAt,
         scope: token.scope,
         client: client,
-        user: {},
+        user: user,
       };
       console.log("in save token", tokens[token.accessToken]);
       return tokens[token.accessToken];
