@@ -1,8 +1,4 @@
-import {
-  approveRequest,
-  logoutRequest,
-  rejectRequest,
-} from "../UserConsentScr/requests.js";
+import { approveRequest, logoutRequest, rejectRequest } from "../requests.js";
 import { login } from "./login.js";
 
 export function consentPage(root) {

@@ -1,4 +1,4 @@
-import { signupRequest } from "../UserConsentScr/requests.js";
+import { signupRequest } from "../requests.js";
 import { login } from "./login.js";
 
 export function signUp(root) {

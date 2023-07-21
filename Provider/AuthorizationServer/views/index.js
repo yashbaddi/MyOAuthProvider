@@ -1,5 +1,5 @@
-import { login } from "../Components/login.js";
-import { consentPage } from "../Components/consentPage.js";
+import { login } from "./Components/login.js";
+import { consentPage } from "./Components/consentPage.js";
 import { isLoggedIn } from "./requests.js";
 
 const root = document.getElementById("root");

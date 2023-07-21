@@ -2,7 +2,7 @@ import {
   generateClientCredentialsRequest,
   loginRequest,
   isLoggedIn,
-} from "../UserConsentScr/requests.js";
+} from "../requests.js";
 import { clientCredentials } from "./clientCredentials.js";
 import { consentPage } from "./consentPage.js";
 import { signUp } from "./signup.js";
