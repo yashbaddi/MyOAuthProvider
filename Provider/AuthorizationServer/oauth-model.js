@@ -1,13 +1,11 @@
 //A model part of the oauth2-server
 import { clients } from "./client.js";
-import { isAuthenticated } from "../middlewares/auth.js";
 import { privateKey } from "../../config.js";
 import jsonwebtoken from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
 import { users } from "./users.js";
 import { readClientDB } from "./Models/client.js";
 import { createCodeDB, deleteCodeDB, readCodeDB } from "./Models/authcodes.js";
-import axios from "axios";
 import { createTokenDB, readTokenDB } from "./Models/tokens.js";
 
 export default oauthModel = {
