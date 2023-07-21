@@ -9,6 +9,5 @@ export async function createUser(req, res, next) {
       data: req.body.data,
     },
   });
-  console.log("USERS AFTER SIGNUP", users);
   res.sendStatus(201);
 }
