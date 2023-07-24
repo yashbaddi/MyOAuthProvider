@@ -6,7 +6,7 @@ import {
   consentHandler,
   denyHandler,
   tokenHandler,
-} from "../controllers/oauth";
+} from "../controllers/oauth.js";
 
 const oauthRouter = express.Router();
 oauthRouter.use(express.urlencoded());
