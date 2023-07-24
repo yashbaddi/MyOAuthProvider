@@ -1,9 +1,5 @@
-import {
-  generateClientCredentialsRequest,
-  loginRequest,
-  isLoggedIn,
-} from "../requests.js";
-import { clientCredentials } from "./clientCredentials.js";
+import { loginRequest, isLoggedIn } from "../requests.js";
+import { clientCredentialsForm } from "./clientCredentailsForm.js";
 import { consentPage } from "./consentPage.js";
 import { signUp } from "./signup.js";
 
@@ -42,11 +38,7 @@ export function login(root) {
     signUp(root);
   });
   genClientBtn.addEventListener("click", () => {
-    generateClientCredentialsRequest().then((res) => {
-      if (res[0]) {
-        clientCredentials(root, res[1]);
-      }
-    });
+    clientCredentialsForm(root);
   });
 
   root.append(loginDiv);
