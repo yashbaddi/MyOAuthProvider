@@ -1,0 +1,164 @@
+{
+	"info": {
+		"_postman_id": "53eed381-02ab-4514-9fcf-067925fca523",
+		"name": "OuathProviderTesting",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11944206"
+	},
+	"item": [
+		{
+			"name": "localhost:3000/session",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"yashbaddi\",\n    \"password\":\"12345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/users",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/users",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"yashbaddi\",\n    \"password\":\"12345\",\n    \"name\":\"Yash Baddi\",\n    \"email\":\"yashbaddi29@gmail.com\",\n    \"data\":\"Hey there this is yash baddi\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/users",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/client",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"The First Client App\",\n    \"redirectUri\":\"http://localhost:3000\",\n    \"grants\":\"authorization_code\",\n    \"scope\":\"profile\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/client",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"client"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/oauth/token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "14afed92-404a-4df4-91c3-62dfeab7fca2",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "fff464df-27c1-4455-9f63-ed68c9ac8c06",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://localhost:3000",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "68eea6a27d37a250576d5db9ed164f5149f11852",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/oauth/token",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3001/profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJNeU9BdXRoUHJvdmlkZXIiLCJzdWIiOnsiaWQiOiJ5YXNoYmFkZGkifSwiZXhwIjoxNjg5OTI4NDMwMTkwLCJpYXQiOjE2ODk5Mjc0MzAxOTAsImF1ZCI6eyJpZCI6IjE0YWZlZDkyLTQwNGEtNGRmNC05MWMzLTYyZGZlYWI3ZmNhMiIsImNsaWVudFNlY3JldCI6ImZmZjQ2NGRmLTI3YzEtNDQ1NS05ZjYzLWVkNjhjOWFjOGMwNiIsInJlZGlyZWN0VXJpcyI6WyJodHRwOi8vbG9jYWxob3N0OjMwMDAiXSwiZ3JhbnRzIjpbImF1dGhvcml6YXRpb25fY29kZSJdfSwic2NvcGUiOiJwcm9maWxlIn0.ZEJNc3qgNj52lAsuAu8T39uTKRdGqpyYmZGYgeYyC78",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3001/profile",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"profile"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
