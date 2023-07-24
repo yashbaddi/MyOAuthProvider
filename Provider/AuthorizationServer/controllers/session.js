@@ -1,5 +1,5 @@
-import { createSessionDB, deleteSessionDB } from "../Models/sessions";
-import { readUserDB } from "../Models/users";
+import { createSessionDB, deleteSessionDB } from "../Models/sessions.js";
+import { readUserDB } from "../Models/users.js";
 import { v4 as uuid } from "uuid";
 
 export async function createSession(req, res, next) {

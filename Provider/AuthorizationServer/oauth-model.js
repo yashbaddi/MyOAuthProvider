@@ -1,16 +1,12 @@
 //A model part of the oauth2-server
-import { clients } from "./client.js";
-import { privateKey } from "../../config.js";
+import { privateKey } from "../config.js";
 import jsonwebtoken from "jsonwebtoken";
-import { v4 as uuid } from "uuid";
-import { users } from "./users.js";
 import { readClientDB } from "./Models/client.js";
 import { createCodeDB, deleteCodeDB, readCodeDB } from "./Models/authcodes.js";
 import { createTokenDB, readTokenDB } from "./Models/tokens.js";
 
-export default oauthModel = {
+const oauthModel = {
   getClient: async (clientId, clientSecret) => {
-    console.log("clients", clients, "id:", clientId, "secret:", clientSecret);
     const client = await readClientDB(clientId);
     return {
       id: clientId,
@@ -20,12 +16,13 @@ export default oauthModel = {
     };
   },
   getUser: async (username) => {
-    return {};
+    return { id: username };
   },
 
   saveAuthorizationCode: async (code, client, user) => {
+    console.log("The main user", user);
     await createCodeDB(code.authorizationCode, {
-      expiresAt: code.expiresAt,
+      expiresAt: new Date(Date.now() + 5 * 60 * 1000),
       redirectUri: code.redirectUri,
       scope: code.scope,
       client: client,
@@ -34,19 +31,16 @@ export default oauthModel = {
     return code;
   },
 
-  revokeAuthorizationCode: async (code) => {
-    if ((await readCodeDB(code.code)) !== undefined) {
-      await deleteCodeDB(code.code);
-      return true;
-    }
-    return false;
-  },
-
   getAuthorizationCode: async (authCode) => {
     const savedCode = await readCodeDB(authCode);
+    console.log(savedCode);
+    console.log(
+      "old expire",
+      new Date(savedCode.expiresAt).toLocaleString("en-IN", { timeZone: "UTC" })
+    );
     return {
       code: authCode,
-      expiresAt: savedCode.expiresAt,
+      expiresAt: new Date(savedCode.expiresAt),
       redirectUri: savedCode.redirectUri,
       scope: savedCode.scope,
       client: savedCode.client,
@@ -54,10 +48,19 @@ export default oauthModel = {
     };
   },
 
+  revokeAuthorizationCode: async (code) => {
+    console.log("auth code revoked");
+    if ((await readCodeDB(code.code)) !== undefined) {
+      await deleteCodeDB(code.code);
+      return true;
+    }
+    return false;
+  },
+
   generateAccessToken: async (client, user, scope) => {
     const payload = {
       iss: "MyOAuthProvider",
-      sub: { user: "123" },
+      sub: user,
       exp: Date.now() + 1000000,
       iat: Date.now(),
       aud: client,
@@ -68,6 +71,7 @@ export default oauthModel = {
   },
 
   saveToken: async (token, client, user) => {
+    console.log("exp", token.accessTokenExpiresAt);
     await createTokenDB(token.accessToken, {
       accessToken: token.accessToken,
       accessTokenExpiresAt: token.accessTokenExpiresAt,
@@ -77,9 +81,11 @@ export default oauthModel = {
       client: client,
       user: user,
     });
-
-    console.log("in save token", await readTokenDB(token.accessToken));
-    return await readTokenDB(token.accessToken);
+    const readToken = await readTokenDB(token.accessToken);
+    readToken.accessTokenExpiresAt = new Date(readToken.accessTokenExpiresAt);
+    readToken.refreshTokenExpiresAt = new Date(readToken.refreshTokenExpiresAt);
+    console.log("in save token");
+    return readToken;
   },
 
   getAccessToken: async (accessToken) => {
@@ -90,3 +96,5 @@ export default oauthModel = {
 
   // validateScope: async () => {},
 };
+
+export default oauthModel;
