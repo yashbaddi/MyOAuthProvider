@@ -62,10 +62,24 @@ export async function isLoggedIn() {
   return [res.ok, message.data];
 }
 
-export async function generateClientCredentialsRequest() {
+export async function generateClientCredentialsRequest(
+  applicationName,
+  redirectURI,
+  grantType,
+  scope
+) {
   const path = "/client/";
   const res = await fetch(serverURL + path, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: applicationName,
+      redirectUri: redirectURI,
+      grants: grantType,
+      scope: scope,
+    }),
   });
   const credentials = await res.json();
   console.log(res.ok, credentials);
