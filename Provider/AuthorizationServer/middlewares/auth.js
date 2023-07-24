@@ -1,10 +1,11 @@
-import { sessions } from "../routes/users.js";
+import { readSessionDB } from "../Models/sessions.js";
 
-export function isAuthenticated(req, res, next) {
+export async function isAuthenticated(req, res, next) {
   console.log(req.cookies);
+  console.log("session", await readSessionDB(req.cookies.sessionID));
   if (
     req.cookies.sessionID &&
-    sessions[req.cookies.sessionID] === req.cookies.username
+    (await readSessionDB(req.cookies.sessionID)) === req.cookies.username
   ) {
     next();
   } else {
