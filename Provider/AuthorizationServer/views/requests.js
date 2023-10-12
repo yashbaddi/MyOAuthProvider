@@ -1,7 +1,10 @@
-const serverURL = "http://localhost:3000";
+import { getSearchParamString } from "./store/queryParams.js";
+
+const serverURL = "http://localhost:4000";
 
 export async function loginRequest(username, password) {
   const path = "/session/";
+  console.log("session Data:", { username, password });
   const res = await fetch(serverURL + path, {
     method: "POST",
     credentials: "include",
@@ -87,13 +90,14 @@ export async function generateClientCredentialsRequest(
 }
 
 export async function approveRequest() {
-  const path = "/oauth/approve";
-  const res = await fetch(serverURL + path, {
-    method: "POST",
-  });
-  const credentials = await res.json();
-  console.log(res.ok, credentials);
-  return [res.ok, credentials];
+  const path = "/oauth/approve" + getSearchParamString();
+  // const res = await fetch(serverURL + path, {
+  //   method: "POST",
+  //   redirect: "follow",
+  // });
+  // console.log(res);
+  // window.location.replace(res.url);
+  window.location.href = serverURL + path;
 }
 
 export async function rejectRequest() {

@@ -1,8 +1,16 @@
 import express from "express";
+import cors from "cors";
 import { verifyToken } from "./verifyTokenMiddleware.js";
 import { readProfile } from "./models/readProfile.js";
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 
 app.get("/profile/", verifyToken, async (req, res, next) => {
   const token = req.headers["x-access-token"];
@@ -15,4 +23,4 @@ app.get("/profile/", verifyToken, async (req, res, next) => {
   });
 });
 
-app.listen(3001);
+app.listen(4001);

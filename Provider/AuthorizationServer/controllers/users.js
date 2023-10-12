@@ -6,6 +6,7 @@ export async function createUser(req, res, next) {
     profile: {
       name: req.body.name,
       email: req.body.email,
+      phone: req.body.phone,
       data: req.body.data,
     },
   });

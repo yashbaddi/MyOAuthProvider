@@ -17,8 +17,8 @@ oauthRouter.post("/token", tokenHandler);
 
 oauthRouter.use("/consent", consentHandler);
 
-oauthRouter.post("/approve", approveHandler);
+oauthRouter.get("/approve", approveHandler);
 
-oauthRouter.post("/denied", denyHandler);
+oauthRouter.get("/denied", denyHandler);
 
 export default oauthRouter;
