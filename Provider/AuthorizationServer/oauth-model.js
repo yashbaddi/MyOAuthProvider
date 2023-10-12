@@ -8,6 +8,7 @@ import { createTokenDB, readTokenDB } from "./Models/tokens.js";
 const oauthModel = {
   getClient: async (clientId, clientSecret) => {
     const client = await readClientDB(clientId);
+    console.log("Oauth Get User ClientSecret:", clientSecret);
     return {
       id: clientId,
       clientSecret: clientSecret,
@@ -61,13 +62,13 @@ const oauthModel = {
     const payload = {
       iss: "MyOAuthProvider",
       sub: user,
-      exp: Date.now() + 1000000,
+      exp: Date.now() + 30 * 24 * 60 * 60,
       iat: Date.now(),
-      aud: client,
+      // aud: client,
       scope: scope,
     };
     console.log(payload);
-    return jsonwebtoken.sign(payload, privateKey);
+    return jsonwebtoken.sign(payload, client.clientSecret);
   },
 
   saveToken: async (token, client, user) => {
