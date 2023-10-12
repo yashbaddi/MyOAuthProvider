@@ -43,7 +43,7 @@ app.use(cookieParser());
 app.get("/callback", async (req, res, next) => {
   const authCode = req.query.code;
 
-  const authorizationUri = "http://localhost:3000";
+  const authorizationUri = "http://localhost:4000";
   const accessTokenRequestBody = {
     client_id: clientId,
     client_secret: clientSecret,
