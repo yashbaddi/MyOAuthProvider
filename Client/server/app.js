@@ -1,10 +1,8 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import axios from "axios";
 import fetch from "node-fetch";
 
-import { v4 as uuid } from "uuid";
 
 const app = express();
 
@@ -53,7 +51,7 @@ app.get("/callback", async (req, res, next) => {
 
   const enocodedString = new URLSearchParams(accessTokenRequestBody).toString();
 
-  const res = await fetch(authorizationUri + "/oauth/token", {
+  await fetch(authorizationUri + "/oauth/token", {
     method: "GET",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -61,7 +59,7 @@ app.get("/callback", async (req, res, next) => {
     body: enocodedString,
   });
 
-  const resourceServerURI = "localhost:3001";
+  const resourceServerURI = "localhost:4001";
 
   const resource = fetch(resourceServerURI + "/profile", {
     method: "GET",

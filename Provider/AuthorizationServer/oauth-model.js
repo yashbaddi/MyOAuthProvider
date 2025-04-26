@@ -1,5 +1,5 @@
 //A model part of the oauth2-server
-import { privateKey } from "../config.js";
+import { privateKey } from "../../Provider/config.js";
 import jsonwebtoken from "jsonwebtoken";
 import { readClientDB } from "./Models/client.js";
 import { createCodeDB, deleteCodeDB, readCodeDB } from "./Models/authcodes.js";
