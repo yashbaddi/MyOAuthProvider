@@ -2,7 +2,7 @@
   "compilerOptions": {
      "allowImportingTsExtensions": true,
     "target": "ES2020",
-    "types": ["node", "express", "uuid", "cookie-parser"],
+    
     "module": "CommonJS",
     "strict": true,
     "esModuleInterop": true,
@@ -13,5 +13,6 @@
     "rootDir": "./src"
   },
   "include": ["src/**/*", "server/**/*", "Client/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
+  "types": ["node", "express", "uuid", "cookie-parser"]
 }
