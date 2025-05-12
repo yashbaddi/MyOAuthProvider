@@ -3,7 +3,7 @@ import {
   authorizeSession,
   createSession,
   deleteSession,
-} from "../controllers/session.js";
+} from "../controllers/session.cts";
 import { isAuthenticated } from "../middlewares/auth.js";
 
 const sessionRouter = express.Router();

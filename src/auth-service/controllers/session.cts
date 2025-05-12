@@ -1,8 +1,10 @@
+// Renamed to TypeScript
 import { createSessionDB, deleteSessionDB } from "../Models/sessions.js";
 import { readUserDB } from "../Models/users.js";
 import { v4 as uuid } from "uuid";
+import { Request, Response, NextFunction } from "express";
 
-export async function createSession(req, res, next) {
+export async function createSession(req: Request, res: Response, next: NextFunction) {
   const user = await readUserDB(req.body.username);
   if (user) {
     if (user.password == req.body.password) {
@@ -20,7 +22,7 @@ export async function createSession(req, res, next) {
   }
 }
 
-export async function deleteSession(req, res, next) {
+export async function deleteSession(req: Request, res: Response, next: NextFunction) {
   await deleteSessionDB(req.cookies.sessionID);
   res.clearCookie("sessionID");
   res.clearCookie("username");
@@ -28,6 +30,6 @@ export async function deleteSession(req, res, next) {
   res.sendStatus(200);
 }
 
-export async function authorizeSession(req, res, next) {
+export async function authorizeSession(req: Request, res: Response, next: NextFunction) {
   res.send({ data: "Logged In" });
 }

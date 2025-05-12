@@ -21,5 +21,14 @@
     "redis": "^4.6.7",
     "uuid": "^9.0.0"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.17",
+    "@types/oauth2-server": "^3.0.18",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.8.3"
+  }
 }

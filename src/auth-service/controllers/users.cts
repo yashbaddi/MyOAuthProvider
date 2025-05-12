@@ -1,6 +1,7 @@
+// Renamed to TypeScript
 import { createUserDB } from "../Models/users.js";
-
-export async function createUser(req, res, next) {
+import { Request, Response, NextFunction } from "express";
+export async function createUser(req: Request, res: Response, next: NextFunction) {
   await createUserDB(req.body.username, {
     password: req.body.password,
     profile: {
