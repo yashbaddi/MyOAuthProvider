@@ -1,11 +1,12 @@
+// Renamed to TypeScript
 import express from "express";
 import cookieParser from "cookie-parser";
-import oauthRouter from "./routes/oauth.js";
-import clientRouter from "./routes/client.js";
-import usersRouter from "./routes/users.js";
-import sessionRouter from "./routes/session.js";
+import oauthRouter from "./routes/oauth.cts";
+import clientRouter from "./routes/client.cts";
+import usersRouter from "./routes/users.cts"
+import sessionRouter from "./routes/session.cts";
 import cors from "cors";
-
+import { Request, Response, NextFunction } from "express";
 const app = express();
 
 app.use(express.json());
@@ -23,7 +24,7 @@ app.use("/oauth", oauthRouter);
 app.use("/session", sessionRouter);
 app.use("/users", usersRouter);
 
-app.use((err, req, res, next) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.status(err.code || 500).json(err);
 });
 

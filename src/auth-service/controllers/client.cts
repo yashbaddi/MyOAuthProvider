@@ -1,7 +1,8 @@
+// Renamed to TypeScript
 import { createClientDB } from "../Models/client.js";
 import { v4 as uuid } from "uuid";
-
-export async function createClient(req, res, next) {
+import { Request, Response, NextFunction } from "express";
+export async function createClient(req: Request, res: Response, next: NextFunction) {
   const clientID = uuid();
   const clientSecret = uuid();
   console.log(req.body);
