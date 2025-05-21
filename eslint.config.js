@@ -1,6 +1,5 @@
 import js from '@eslint/js';
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
 import { defineConfig } from 'eslint/config';
 import prettier from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
@@ -24,8 +23,6 @@ export default defineConfig([
       },
     },
   },
-
-  tseslint.configs.recommended,
   prettier,
   {
     rules: {
