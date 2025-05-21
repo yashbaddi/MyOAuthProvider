@@ -1,7 +1,7 @@
 import { createClientDB } from "../Models/client.js";
 import { v4 as uuid } from "uuid";
 
-export async function createClient(req, res, next) {
+export async function createClient(req, res,) {
   const clientID = uuid();
   const clientSecret = uuid();
   console.log(req.body);

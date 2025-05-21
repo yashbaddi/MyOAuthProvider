@@ -2,7 +2,7 @@ import { createSessionDB, deleteSessionDB } from "../Models/sessions.js";
 import { readUserDB } from "../Models/users.js";
 import { v4 as uuid } from "uuid";
 
-export async function createSession(req, res, next) {
+export async function createSession(req, res) {
   const user = await readUserDB(req.body.username);
   if (user) {
     if (user.password == req.body.password) {

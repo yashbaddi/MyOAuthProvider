@@ -1,6 +1,6 @@
 import { createUserDB } from "../Models/users.js";
 
-export async function createUser(req, res, next) {
+export async function createUser(req, res) {
   await createUserDB(req.body.username, {
     password: req.body.password,
     profile: {

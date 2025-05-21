@@ -34,7 +34,7 @@ export async function logoutRequest() {
 }
 
 export async function signupRequest(name, username, email, data, password) {
-  const path = "/users/signup";
+  const path = "/users/";
   const res = await fetch(serverURL + path, {
     method: "POST",
     credentials: "include",
